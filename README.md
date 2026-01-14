@@ -49,6 +49,9 @@ The testbench reflects realistic user behavior, avoiding unrealistic assumptions
 
 ->  Core elevator FSM
 
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/137624a5-5fd8-4503-8513-88fca1593703" />
+
+
 -> Request queue (pending_req)
 
 -> Direction tracking (last_dir)
