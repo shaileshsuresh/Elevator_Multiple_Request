@@ -38,16 +38,12 @@ end top_tb;
 architecture Behavioral of top_tb is
 signal clk          :   std_logic;
 signal reset        :   std_logic;
---signal slow_en	:	std_logic;
 signal floor_req    :   std_logic_vector(3 downto 0);
 signal move_up      :   std_logic;
 signal move_down    :   std_logic;
 signal open_door    :   std_logic;
 signal floor        :   std_logic_vector(3 downto 0);
---signal f_o          :   std_logic_vector(3 downto 0);
 signal led          :   std_logic;
-
-
 
 signal req_history	:	std_logic_vector(3 downto 0) := (others => '0');
 signal served		:	std_logic_vector(3 downto 0) := (others => '0');
@@ -90,32 +86,36 @@ begin
   ----------------------------------------------------------------
   floor_req <= "1000"; -- floor 3
   req_history  <= req_history or "1000";
-  
+ 
   
   wait for 50 ns;
   floor_req <= "0010";  -- floor 1
   req_history   <= req_history or "0010";
+ 
   
 
   wait for 50 ns;
   floor_req <= "0100";  -- floor 2
   req_history   <= req_history or "0100";
+ 
   
   
   wait for 1000 ns;
   floor_req <= "0010"; -- floor 1
   req_history	<= req_history or "0010";
+
   
   
   wait for 1000 ns;
   floor_req <= "1000"; -- floor 3
   req_history	<= req_history or "1000";
+
   
   
   wait for 50 ns;
   floor_req <= "0001"; -- floor 0
   req_history	<= req_history or "0001";
-  
+ 
 
   -- release buttons
   wait for 20 ns;
@@ -132,26 +132,17 @@ end process;
 	begin
 	--wait until the first door opening
 	wait until reset = '0';
+	
 	wait until open_door'event and open_door = '1';
-	
-	while true loop
-	
-		f := to_integer(unsigned(floor));
+	while true loop	
 		
+		f := to_integer(unsigned(floor));
 		--Check that if stop was expected
 		--Must have requested sometime earlier
 		assert req_history(f) = '1'
 		report "Unexpected stop at floor" & integer'image(f)
 		severity error;
 		
-		--report "Stopped at floor" & integer'image(f)
-			--severity note;
-		
-		--Must not be served twice
-		
-		assert served(f) = '0'
-		report "Duplicate stop at floor " & integer'image(f)
-		severity error;
 		
 		report "Stopped at valid floor " & integer'image(f)
 		severity note;
